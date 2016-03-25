@@ -22,7 +22,8 @@
         lineBreaks: 'gfm',
         additionalFooterText: '',
         anchorCharacter: '&para;',
-        tocAnchor: '[ &uarr; ]'
+        tocAnchor: '[ &uarr; ]',
+        defaultDoc: 'index.md'
     };
 
 

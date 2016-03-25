@@ -373,7 +373,7 @@
 		var filename = window.location.hash;
 
 		if (filename.length === 0) {
-            filename = '#!index.md';
+            filename = '#!'+$.md.config.defaultDoc;
         }
 		var selector = 'li:has(a[href="' + filename + '"])';
 		$('#md-menu').find (selector).addClass ('active');
@@ -485,14 +485,16 @@
     // note: the footer is part of the GPLv3 legal information
     // and may not be removed or hidden to comply with licensing conditions.
     function addFooter() {
-        var navbar = '';
-        navbar += '<hr><div class="scontainer">';
-        navbar +=   '<div class="pull-right md-copyright-footer"> ';
-        navbar +=     '<span id="md-footer-additional"></span>';
-        navbar +=     'Website generated with <a href="http://www.mdwiki.info">MDwiki</a> ';
-        navbar +=     '&copy; Timo D&ouml;rr and contributors. ';
-        navbar +=   '</div>';
-        navbar += '</div>';
+        var navbar = $.md.config.footer;
+        if (!navbar) {
+            navbar = '<hr><div class="scontainer">';
+            navbar +=   '<div class="pull-right md-copyright-footer"> ';
+            navbar +=     '<span id="md-footer-additional"></span>';
+            navbar +=     'Website generated with <a href="http://www.mdwiki.info">MDwiki</a> ';
+            navbar +=     '&copy; Timo D&ouml;rr and contributors. ';
+            navbar +=   '</div>';
+            navbar += '</div>';
+        }
         var $navbar = $(navbar);
         $navbar.css('position', 'relative');
         $navbar.css('margin-top', '1em');

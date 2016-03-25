@@ -450,6 +450,7 @@
 
         // wire the stages up
         $.md.stage('init').done(function() {
+            appendDefaultFilenameToHash();
             $.md.stage('load').run();
         });
         $.md.stage('load').done(function() {
@@ -527,12 +528,12 @@
             currentHashString === '#'||
             currentHashString === '#!')
         {
-            newHashString = '#!index.md';
+            newHashString = '#!'+$.md.config.defaultDoc;
         }
         else if (currentHashString.startsWith ('#!') &&
                  currentHashString.endsWith('/')
                 ) {
-            newHashString = currentHashString + 'index.md';
+            newHashString = currentHashString + $.md.config.defaultDoc;
         }
         if (newHashString)
             window.location.hash = newHashString;
@@ -544,8 +545,6 @@
         registerFetchConfig();
         registerBuildNavigation();
         extractHashData();
-
-        appendDefaultFilenameToHash();
 
         $(window).bind('hashchange', function () {
             window.location.reload(false);
