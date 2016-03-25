@@ -336,6 +336,11 @@
                 return;
             }
 
+            // deal with gitbook format
+            if (navMD.startsWith('# Summary')) {
+                navMD=navMD.replace(/\n\*\s+/g,'\n');
+                navMD=navMD.replace(/\n\s+\*/g,'\n*');
+            }
             var navHtml = marked(navMD);
             // TODO why are <script> tags from navHtml APPENDED to the jqcol?
             var $h = $('<div>' + navHtml + '</div>');
