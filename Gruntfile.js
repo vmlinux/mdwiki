@@ -56,6 +56,7 @@ module.exports = function(grunt) {
 
         // files that we always inline (stuff not available on CDN)
         internalCssFiles: [
+            'extlib/css/index.css',
             'extlib/css/colorbox.css'
         ],
         // ONLY PUT ALREADY MINIFIED FILES IN HERE!

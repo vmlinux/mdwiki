@@ -159,13 +159,29 @@
             var $el = $(e);
             var href = $el.attr('href');
             var text = $el.toptext();
+            var exturl = bindPath('/'+$.md.mainHref,href);
+            exturl = bindPath(location.pathname,exturl);
 
             $.ajax({
-                url: href,
+                url: exturl,
                 dataType: 'text'
             })
             .done(function (data) {
                 var $html = $(transformMarkdown(data));
+                $html.find('img').each(function(index,item){
+                    var itemsrc=$(item).attr('src');
+                    if (itemsrc){
+                        itemsrc=bindPath(exturl,itemsrc);
+                        $(item).attr('src',itemsrc);
+                    }
+                });
+                $html.find('a').each(function(index,item){
+                    var itemhref=$(item).attr('href');
+                    if (itemhref){
+                        itemhref=bindPath(exturl,itemhref);
+                        $(item).attr('href',itemhref);
+                    }
+                });
                 if (text.startsWith('preview:')) {
                     // only insert the selected number of paragraphs; default 3
                     var num_preview_elements = parseInt(text.substring(8), 10) ||3;
@@ -181,6 +197,21 @@
                 latch.countDown();
             });
         });
+    }
+
+    function bindPath(basepath,path) {
+        if (path.startsWith('/')) {
+            return path;
+        } else {
+            var baseurl=basepath.substr(0,basepath.lastIndexOf('/'));
+            if (baseurl.length===0) {
+                baseurl='.';
+            }
+            if (path.startsWith('./')) {
+                path=path.substr(2);
+            }
+            return baseurl+'/'+path;
+        }
     }
 
     function isSpecialLink(href) {
