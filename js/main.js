@@ -5,9 +5,13 @@
 
     function init() {
         $.md.stages = [
+            // loads config
+            $.Stage('preinit'),
+
+            // init hash
             $.Stage('init'),
 
-            // loads config, initial markdown and navigation
+            // initial markdown and navigation
             $.Stage('load'),
 
             // will transform the markdown to html
@@ -302,20 +306,20 @@
 
     var navMD = '';
     $.md.NavigationDfd = $.Deferred();
-    var ajaxReq = {
-        url: 'navigation.md',
-        dataType: 'text'
-    };
-    $.ajax(ajaxReq).done(function(data) {
-        navMD = data;
-        $.md.NavigationDfd.resolve();
-    }).fail(function() {
-        $.md.NavigationDfd.reject();
-    });
 
     function registerBuildNavigation() {
 
         $.md.stage('init').subscribe(function(done) {
+            var ajaxReq = {
+                url: $.md.config.naviDoc,
+                dataType: 'text'
+            };
+            $.ajax(ajaxReq).done(function(data) {
+                navMD = data;
+                $.md.NavigationDfd.resolve();
+            }).fail(function() {
+                $.md.NavigationDfd.reject();
+            });
             $.md.NavigationDfd.done(function() {
                 done();
             })
@@ -384,7 +388,7 @@
     });
     function registerFetchConfig() {
 
-        $.md.stage('init').subscribe(function(done) {
+        $.md.stage('preinit').subscribe(function(done) {
             // TODO 404 won't get cached, requesting it every reload is not good
             // maybe use cookies? or disable re-loading of the page
             //$.ajax('config.json').done(function(data){
@@ -449,8 +453,11 @@
     function runStages() {
 
         // wire the stages up
-        $.md.stage('init').done(function() {
+        $.md.stage('preinit').done(function() {
             appendDefaultFilenameToHash();
+            $.md.stage('init').run();
+        });
+        $.md.stage('init').done(function() {
             $.md.stage('load').run();
         });
         $.md.stage('load').done(function() {
@@ -497,7 +504,7 @@
         });
 
         // trigger the whole process by runing the init stage
-        $.md.stage('init').run();
+        $.md.stage('preinit').run();
         return;
     }
 

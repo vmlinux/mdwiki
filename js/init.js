@@ -23,7 +23,8 @@
         additionalFooterText: '',
         anchorCharacter: '&para;',
         tocAnchor: '[ &uarr; ]',
-        defaultDoc: 'index.md'
+        defaultDoc: 'index.md',
+        naviDoc: 'navigation.md'
     };
 
 
