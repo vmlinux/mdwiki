@@ -24,7 +24,11 @@
         anchorCharacter: '&para;',
         tocAnchor: '[ &uarr; ]',
         defaultDoc: 'index.md',
-        naviDoc: 'navigation.md'
+        naviDoc: 'navigation.md',
+        colorbox: {
+            slideshowAuto: false,
+            transition: 'elastic'
+        }
     };
 
 

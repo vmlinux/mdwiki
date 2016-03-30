@@ -745,14 +745,14 @@
 			}
 			
 			if (settings.transition === 'fade') {
-				$box.fadeTo(speed, 1, removeFilter);
+				$box.find('#cboxContent').fadeTo(speed, 1, removeFilter);
 			} else {
 				removeFilter();
 			}
 		};
 		
 		if (settings.transition === 'fade') {
-			$box.fadeTo(speed, 0, function () {
+			$box.find('#cboxContent').fadeTo(speed, 0, function () {
 				publicMethod.position(0, callback);
 			});
 		} else {

@@ -61,7 +61,7 @@ module.exports = function(grunt) {
         ],
         // ONLY PUT ALREADY MINIFIED FILES IN HERE!
         internalJsFiles: [
-            'extlib/js/jquery.colorbox.min.js'
+            'extlib/js/jquery.colorbox.js'
         ],
 
         // files that we inline in the fat release (basically everything)
@@ -102,6 +102,10 @@ module.exports = function(grunt) {
         uglify: {
             options: {
                 // banner: '<%= banner %>'
+            },
+            internal: {
+                src: '<%= internalJsFiles %>',
+                dest: 'internal.min.js'
             },
             dist: {
                 src: '<%= concat.dev.dest %>',

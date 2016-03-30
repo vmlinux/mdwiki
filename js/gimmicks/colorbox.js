@@ -39,7 +39,7 @@
                 // (so won't be part of the gallery)
 
                 // apply colorbox on their parent anchors
-                .parents('a').colorbox({
+                .parents('a').colorbox($.extend({
                     rel: gal_group,
                     opacity: 0.75,
                     slideshow: true,
@@ -48,7 +48,7 @@
                     scalePhotos: true,
                     photo: true,
                     slideshowAuto: false
-                });
+                },$.md.config.colorbox));
             });
         }
     };
