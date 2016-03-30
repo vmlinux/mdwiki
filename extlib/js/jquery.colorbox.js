@@ -596,16 +596,10 @@
 		}
 	};
 
-	publicMethod.prep = function (object) {
-		if (!open) {
-			return;
-		}
-		
-		var callback, speed = settings.transition === "none" ? 0 : settings.speed;
-		
+	publicMethod.prepChange = function (object) {
 		$loaded.remove();
 		$loaded = $tag(div, 'LoadedContent').append(object);
-		
+
 		function getWidth() {
 			settings.w = settings.w || $loaded.width();
 			settings.w = settings.mw && settings.mw < settings.w ? settings.mw : settings.w;
@@ -616,29 +610,37 @@
 			settings.h = settings.mh && settings.mh < settings.h ? settings.mh : settings.h;
 			return settings.h;
 		}
-		
+
 		$loaded.hide()
-		.appendTo($loadingBay.show())// content has to be appended to the DOM for accurate size calculations.
-		.css({width: getWidth(), overflow: settings.scrolling ? 'auto' : 'hidden'})
-		.css({height: getHeight()})// sets the height independently from the width in case the new width influences the value of height.
-		.prependTo($content);
-		
-		$loadingBay.hide();
-		
-		// floating the IMG removes the bottom line-height and fixed a problem where IE miscalculates the width of the parent element as 100% of the document width.
-		//$(photo).css({'float': 'none', marginLeft: 'auto', marginRight: 'auto'});
-		
-		$(photo).css({'float': 'none'});
-		
-		// Hides SELECT elements in IE6 because they would otherwise sit on top of the overlay.
-		if (isIE6) {
-			$('select').not($box.find('select')).filter(function () {
-				return this.style.visibility !== 'hidden';
-			}).css({'visibility': 'hidden'}).one(event_cleanup, function () {
-				this.style.visibility = 'inherit';
-			});
+	    .appendTo($loadingBay.show())// content has to be appended to the DOM for accurate size calculations.
+	    .css({width: getWidth(), overflow: settings.scrolling ? 'auto' : 'hidden'})
+	    .css({height: getHeight()})// sets the height independently from the width in case the new width influences the value of height.
+	    .prependTo($content);
+	    
+	    $loadingBay.hide();
+	    
+	    // floating the IMG removes the bottom line-height and fixed a problem where IE miscalculates the width of the parent element as 100% of the document width.
+	    //$(photo).css({'float': 'none', marginLeft: 'auto', marginRight: 'auto'});
+	    
+	    $(photo).css({'float': 'none'});
+	    
+	    // Hides SELECT elements in IE6 because they would otherwise sit on top of the overlay.
+	    if (isIE6) {
+	    	$('select').not($box.find('select')).filter(function () {
+	    		return this.style.visibility !== 'hidden';
+	    	}).css({'visibility': 'hidden'}).one(event_cleanup, function () {
+	    		this.style.visibility = 'inherit';
+	    	});
+	    }
+	};
+
+	publicMethod.prep = function (object) {
+		if (!open) {
+			return;
 		}
 		
+		var callback, speed = settings.transition === "none" ? 0 : settings.speed;
+				
 		callback = function () {
 			var preload,
 				i,
@@ -745,19 +747,29 @@
 			}
 			
 			if (settings.transition === 'fade') {
+				$box.fadeTo(speed, 1, removeFilter);
+			} else if (settings.transition === 'fadeContent') {
 				$box.find('#cboxContent').fadeTo(speed, 1, removeFilter);
 			} else {
 				removeFilter();
 			}
 		};
-		
+
 		if (settings.transition === 'fade') {
-			$box.find('#cboxContent').fadeTo(speed, 0, function () {
+			$box.fadeTo(speed, 0, function () {
+				publicMethod.prepChange(object);
 				publicMethod.position(0, callback);
 			});
+		} else if (settings.transition === 'fadeContent') {
+			$box.find('#cboxContent').fadeTo(speed, 0, function() {
+				publicMethod.prepChange(object);
+				publicMethod.position(speed, callback);
+			});
 		} else {
+			publicMethod.prepChange(object);
 			publicMethod.position(speed, callback);
 		}
+		
 	};
 
 	publicMethod.load = function (launched) {
